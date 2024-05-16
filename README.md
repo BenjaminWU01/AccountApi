@@ -16,9 +16,16 @@ For at køre de tilhørende migrations kræves `dotnet-ef` som kan installeres g
 dotnet tool install --global dotnet-ef
 ```
 
-Dernæst kan databasen opsættes via kommandoen:
+Dernæst kan databasen opsættes fra root via kommandoen:
 
 ```
+dotnet ef database update --project AccountApi
+```
+
+eller via følgende:
+
+```
+cd AccountApi
 dotnet ef database update
 ```
 
