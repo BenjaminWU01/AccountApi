@@ -1,4 +1,4 @@
-namespace AccountApi.Models;
+namespace library;
 
 public class Account {
     public int Id { get; set; }

@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using AccountApi.Models;
+using library;
 
 namespace AccountApi.Controllers
 {
@@ -15,12 +15,14 @@ namespace AccountApi.Controllers
             _context = context;
         }
 
+        // GET all accounts
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Account>>> GetAccounts()
         {
             return await _context.Accounts.ToListAsync();
         }
 
+        // GET a specific account based on account ID
         [HttpGet("{id}")]
         public async Task<ActionResult<Account>> GetAccount(int id)
         {
@@ -31,9 +33,10 @@ namespace AccountApi.Controllers
                 return NotFound();
             }
 
-            return account;
+            return Ok(account);
         }
 
+        // GET all accounts belonging to the given owner
         [HttpGet("owner/{name}")]
         public async Task<ActionResult<IEnumerable<Account>>> GetAccountsByOwner(string name)
         {
@@ -51,9 +54,10 @@ namespace AccountApi.Controllers
                 return NotFound();
             }
 
-            return accounts;
+            return Ok(accounts);
         }
 
+        // POST a new account
         [HttpPost]
         public async Task<ActionResult<Account>> PostAccount(Account account)
         {
@@ -63,6 +67,7 @@ namespace AccountApi.Controllers
             return CreatedAtAction("GetAccount", new { id = account.Id }, account);
         }
 
+        // POST a new transaction between two accounts
         [HttpPost("transfer")]
         public async Task<ActionResult> TransferFunds([FromQuery] int fromAccountId, [FromQuery] int toAccountId, [FromQuery] float amount)
         {
@@ -74,6 +79,9 @@ namespace AccountApi.Controllers
 
             if (fromAccount == null || toAccount == null)
                 return NotFound("One or both accounts not found.");
+
+            if (fromAccount == toAccount)
+                return BadRequest("Both accounts cannot be the same.");
 
             if (fromAccount.Balance < amount)
                 return BadRequest("Insufficient funds in the source account.");

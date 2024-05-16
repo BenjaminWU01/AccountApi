@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using AccountApi.Models;
+using library;
 
 var builder = WebApplication.CreateBuilder(args);
 
